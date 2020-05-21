@@ -1,0 +1,18 @@
+<ion-header>
+	<ion-toolbar>
+		<ion-title>Techsessions demo</ion-title>
+	</ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-text-center">
+
+	<ion-button *ngIf="!isConnected" (click)="createChannel()">Create Channel</ion-button>
+	<ion-button *ngIf="!isConnected" (click)="joinChannel()">Join Channel</ion-button>
+
+	<ion-button *ngIf="isConnected" (click)="sendMessage()">Send Message</ion-button>
+
+	<zxing-scanner *ngIf="scannerEnabled" (scanSuccess)="onScanSuccess($event)"></zxing-scanner>
+
+	<qrcode *ngIf="showQRCode" [qrdata]="channelName" [width]="256"></qrcode>
+
+</ion-content>
