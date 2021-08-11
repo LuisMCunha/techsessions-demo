@@ -8,7 +8,9 @@ import {Socket} from "ngx-socket-io"
 })
 export class HomePage {
 
-  public channelName: string = "aquele-canal";
+  public userName: string = "";
+  public channelName: string = "";
+  public message: string = "";
   public isConnected: boolean = false;
   public showQRCode: boolean = false;
   public scannerEnabled: boolean = false;
@@ -22,32 +24,54 @@ export class HomePage {
       this.showQRCode = false;
     });
 
-    this.socket.fromEvent("message").subscribe(data => {
-      alert(data);
+    this.socket.fromEvent("message").subscribe((data: any) => {
+      alert(data.userName + " says: " + data.message);
     });
   }
 
-  createChannel() {
+  toggleCreate() {
     this.scannerEnabled = false;
-    this.channelName = new Date().getTime().toString();
     this.showQRCode = true;
+    this.createChannel();
+  }
+
+  createChannel(channelName?: string) {
+    this.channelName = channelName ? channelName : "Aquele-canal-" + new Date().getTime().toString();
     this.socket.emit("create-channel", this.channelName);
   }
 
-  joinChannel() {
+  toggleJoin() {
     this.showQRCode = false;
     this.scannerEnabled = true;
   }
 
-  sendMessage() {
-    this.socket.emit("send-message",
-      {channel: this.channelName, text: "Mensagem " + Math.floor(Math.random() * 100)});
+  onScanSuccess(result: string) {
+    this.joinChannel(result);
   }
 
-  onScanSuccess(result: string) {
+  joinChannel(channelName) {
     this.scannerEnabled = false;
-    this.channelName = result;
-    this.socket.emit("join-channel", this.channelName);
+    this.channelName = channelName;
+
+    this.socket.emit("join-channel", {
+      userName: this.getUserName(),
+      channelName: this.channelName
+    });
+
+  }
+
+  getUserName() {
+    if (!this.userName) this.userName = "anonymous-" + Math.floor(Math.random() * 1000);
+    return this.userName;
+  }
+
+  sendMessage() {
+    this.socket.emit("send-message", {
+      channel: this.channelName,
+      userName: this.getUserName(),
+      message: this.message
+    });
+    this.message = "";
   }
 
 }

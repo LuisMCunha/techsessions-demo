@@ -1,18 +1,39 @@
 <ion-header>
 	<ion-toolbar>
-		<ion-title>Techsessions demo</ion-title>
+		<ion-title>Aquele Chat</ion-title>
 	</ion-toolbar>
 </ion-header>
 
 <ion-content class="ion-text-center">
+	<div class="display-area">
 
-	<ion-button *ngIf="!isConnected" (click)="createChannel()">Create Channel</ion-button>
-	<ion-button *ngIf="!isConnected" (click)="joinChannel()">Join Channel</ion-button>
+		<ion-button *ngIf="!isConnected && !showQRCode" (click)="toggleCreate()">Create Channel</ion-button>
+		<ion-button *ngIf="!isConnected && !scannerEnabled" (click)="toggleJoin()">Join Channel</ion-button>
+		<ion-item *ngIf="!isConnected" lines="inset" class="center-input">
+			<ion-input [(ngModel)]="userName" type="text" placeholder="Enter Username"></ion-input>
+		</ion-item>
 
-	<ion-button *ngIf="isConnected" (click)="sendMessage()">Send Message</ion-button>
+		<p *ngIf="scannerEnabled">Read a QR Code</p>
+		<zxing-scanner *ngIf="scannerEnabled" (scanSuccess)="onScanSuccess($event)"></zxing-scanner>
+		<p *ngIf="scannerEnabled">Or</p>
+		<ion-item [style.display]="scannerEnabled && !isConnected ? 'block' :'none'" lines="inset" class="center-input">
+			<ion-input #joinChannelInput type="text" placeholder="Join channel name"></ion-input>
+		</ion-item>
+		<ion-button *ngIf="scannerEnabled" [disabled]="joinChannelInput.value === ''" (click)="joinChannel(joinChannelInput.value)">Join Channel</ion-button>
 
-	<zxing-scanner *ngIf="scannerEnabled" (scanSuccess)="onScanSuccess($event)"></zxing-scanner>
+		<p *ngIf="showQRCode">Show the QR Code</p>
+		<qrcode *ngIf="showQRCode" [qrdata]="channelName" [width]="256"></qrcode>
+		<p *ngIf="showQRCode">Or</p>
+		<ion-item [style.display]="showQRCode && !isConnected ? 'block' :'none'" lines="inset" class="center-input">
+			<ion-input #createChannelInput type="text" placeholder="Create channel name"></ion-input>
+		</ion-item>
+		<ion-button *ngIf="showQRCode" [disabled]="createChannelInput.value.toString() === ''" (click)="createChannel(createChannelInput.value.toString())">Create Channel</ion-button>
 
-	<qrcode *ngIf="showQRCode" [qrdata]="channelName" [width]="256"></qrcode>
-
+	</div>
 </ion-content>
+<ion-footer *ngIf="isConnected">
+	<ion-item class="container" lines="inset">
+		<ion-input [(ngModel)]="message" placeholder="Enter message"></ion-input>
+		<ion-button [disabled]="message=== ''" (click)="sendMessage()">Send Message</ion-button>
+	</ion-item>
+</ion-footer>
