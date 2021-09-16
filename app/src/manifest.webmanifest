@@ -1,6 +1,6 @@
 {
-  "name": "Aquele Chat",
-  "short_name": "Aquele Chat",
+  "name": "Aquele chat",
+  "short_name": "app",
   "theme_color": "#1976d2",
   "background_color": "#fafafa",
   "display": "standalone",
