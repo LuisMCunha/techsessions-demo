@@ -1,5 +1,11 @@
 const PORT = process.env.PORT || 3000;
-const io = require("socket.io")(PORT);
+const httpServer = require("http").createServer();
+const io = require("socket.io")(httpServer, {
+  cors: {
+    origin: "https://techsessions-demo.web.app",
+    methods: ["GET", "POST"]
+  }
+});
 
 io.on("connection", socket => {
 
@@ -18,3 +24,5 @@ io.on("connection", socket => {
 	});
 
 });
+
+httpServer.listen(PORT);
