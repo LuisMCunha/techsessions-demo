@@ -32,3 +32,5 @@ npm-debug.log*
 /www
 /.git
 /.firebase
+
+package-lock.json

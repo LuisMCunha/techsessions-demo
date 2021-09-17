@@ -24,8 +24,8 @@ export class HomePage {
       this.showQRCode = false;
     });
 
-    this.socket.fromEvent("message").subscribe((data: any) => {
-      alert(data.userName + " says: " + data.message);
+    this.socket.fromEvent("message").subscribe((message: any) => {
+      alert(message.userName + " says: " + message.text);
     });
   }
 
@@ -55,7 +55,7 @@ export class HomePage {
 
     this.socket.emit("join-channel", {
       userName: this.getUserName(),
-      channelName: this.channelName
+      name: this.channelName
     });
 
   }
@@ -65,11 +65,14 @@ export class HomePage {
     return this.userName;
   }
 
-  sendMessage() {
+  sendMessage(keyEvent?) {
+    if (keyEvent && (keyEvent.key !== 'Enter' || keyEvent.code !== 'Enter' || keyEvent.charCode !== 13)) {
+      return;
+    }
     this.socket.emit("send-message", {
       channel: this.channelName,
       userName: this.getUserName(),
-      message: this.message
+      text: this.message
     });
     this.message = "";
   }

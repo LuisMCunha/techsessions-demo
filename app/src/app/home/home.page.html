@@ -33,7 +33,7 @@
 </ion-content>
 <ion-footer *ngIf="isConnected">
 	<ion-item class="container" lines="inset">
-		<ion-input [(ngModel)]="message" placeholder="Enter message"></ion-input>
-		<ion-button [disabled]="message=== ''" (click)="sendMessage()">Send Message</ion-button>
+		<ion-input [(ngModel)]="message" placeholder="Enter message" (keypress)="sendMessage($event)"></ion-input>
+		<ion-button [disabled]="message === ''" (click)="sendMessage()">Send Message</ion-button>
 	</ion-item>
 </ion-footer>

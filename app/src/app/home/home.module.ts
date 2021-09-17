@@ -11,7 +11,7 @@ import {SocketIoConfig, SocketIoModule} from "ngx-socket-io";
 import {ZXingScannerModule} from "@zxing/ngx-scanner";
 import {QRCodeModule} from "angularx-qrcode"
 
-const config: SocketIoConfig = {url: environment.serverURL};
+const config: SocketIoConfig = {url: environment.serverURL, options: {} };
 
 @NgModule({
   imports: [
